@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnemiesManager : MonoBehaviour
 {
+    [SerializeField] EdgeCollider2D unspawner;
+
     const int INCREASE_SPEED_INTERVAL = 1500;
     const int INCREASE_SPAWN_RATE_INTERVAL = 1000;
 
@@ -31,7 +33,7 @@ public class EnemiesManager : MonoBehaviour
             vel.Normalize();
             vel *= velocityMag;
 
-            TrianguloController.Create(pos, vel);
+            TrianguloController.Create(pos, vel, unspawner);
         }
         if (updateCalls % INCREASE_SPEED_INTERVAL == 0)
         {
