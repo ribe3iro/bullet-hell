@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4088025491753280132}
   - component: {fileID: 2359455506034466077}
   - component: {fileID: 4680836152964810550}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Triangulo
   m_TagString: Enemy
   m_Icon: {fileID: 0}
