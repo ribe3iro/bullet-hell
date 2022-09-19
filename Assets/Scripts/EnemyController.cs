@@ -21,4 +21,5 @@ public abstract class EnemyController : MonoBehaviour
     }
 
     abstract public Vector2 getSpawnVelocity();
+    abstract public void increaseDifficulty(EnemySpawnInfo spawnInfo);
 }

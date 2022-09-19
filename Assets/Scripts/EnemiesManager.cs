@@ -6,11 +6,6 @@ public class EnemiesManager : MonoBehaviour
 {
     [SerializeField] EdgeCollider2D unspawner;
 
-    const int INCREASE_SPEED_INTERVAL = 1500;
-    const int INCREASE_SPAWN_RATE_INTERVAL = 1000;
-
-    const int MIN_SPAWN_INTERVAL = 50;
-
     EnemySpawnInfo[] enemiesSpawnInfo;
 
     int updateCalls = 0;
@@ -18,8 +13,8 @@ public class EnemiesManager : MonoBehaviour
     void Start()
     {
         enemiesSpawnInfo = new EnemySpawnInfo[]{
-            new EnemySpawnInfo("Triangulo", 100, 3),
-            new EnemySpawnInfo("Quadrado", 200, 9),
+            new EnemySpawnInfo("Triangulo", 100, 3f, 10),
+            new EnemySpawnInfo("Quadrado", 500, 7.5f, 4),
         };
     }
 
@@ -37,26 +32,18 @@ public class EnemiesManager : MonoBehaviour
 
                 Spawn(pos, spawnInfo);
             }
-            /*
-            if (updateCalls % INCREASE_SPEED_INTERVAL == 0)
-            {
-                velocityMag += 1f;
-            }
-            if (spawnInterval > MIN_SPAWN_INTERVAL &&
-                updateCalls % INCREASE_SPAWN_RATE_INTERVAL == 0)
-            {
-                spawnInterval -= 15;
-            }
-            */
         }
     }
 
     private GameObject Spawn(Vector2 position, EnemySpawnInfo spawnInfo)
     {
+        spawnInfo.spawns++;
+
         GameObject enemy = (GameObject)Resources.Load("Prefabs/" + spawnInfo.shape);
         GameObject newEnemy = Instantiate(enemy) as GameObject;
 
         newEnemy.transform.position = position;
+
         EnemyController controller = newEnemy.GetComponent<EnemyController>();
         controller.unspawner = this.unspawner;
 
@@ -64,20 +51,33 @@ public class EnemiesManager : MonoBehaviour
         velocity *= spawnInfo.velocityMag;
         newEnemy.GetComponent<Rigidbody2D>().velocity = velocity;
 
+        if (spawnInfo.spawns % spawnInfo.spawnsUntilIncreaseDifficulty == 0)
+        {
+            controller.increaseDifficulty(spawnInfo);
+        }
+
         return newEnemy;
     }
 }
 
-class EnemySpawnInfo : MonoBehaviour
+public class EnemySpawnInfo : MonoBehaviour
 {
     public string shape;
     public int spawnInterval;
     public float velocityMag;
+    public int spawnsUntilIncreaseDifficulty;
 
-    public EnemySpawnInfo(string shape, int spawnInterval, float velocityMag)
+    public int spawns;
+
+    public static int MIN_SPAWN_INTERVAL = 50;
+
+    public EnemySpawnInfo(string shape, int spawnInterval, float velocityMag, int spawnsUntilIncreaseDifficulty)
     {
         this.shape = shape;
         this.spawnInterval = spawnInterval;
         this.velocityMag = velocityMag;
+        this.spawnsUntilIncreaseDifficulty = spawnsUntilIncreaseDifficulty;
+
+        this.spawns = 0;
     }
 }

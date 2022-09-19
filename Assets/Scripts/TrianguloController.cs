@@ -12,4 +12,15 @@ public class TrianguloController : EnemyController
 
         return velocity;
     }
+
+    public override void increaseDifficulty(EnemySpawnInfo spawnInfo)
+    {
+        spawnInfo.spawnInterval -= 8;
+        if (spawnInfo.spawnInterval < EnemySpawnInfo.MIN_SPAWN_INTERVAL)
+        {
+            spawnInfo.spawnInterval = EnemySpawnInfo.MIN_SPAWN_INTERVAL;
+        }
+
+        spawnInfo.velocityMag += 0.3f;
+    }
 }
