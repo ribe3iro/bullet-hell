@@ -11,38 +11,73 @@ public class EnemiesManager : MonoBehaviour
 
     const int MIN_SPAWN_INTERVAL = 50;
 
+    EnemySpawnInfo[] enemiesSpawnInfo;
+
     int updateCalls = 0;
-    int spawnInterval = 100;
-    float velocityMag = 3;
 
     void Start()
     {
-        
+        enemiesSpawnInfo = new EnemySpawnInfo[]{
+            new EnemySpawnInfo("Triangulo", 100, 3),
+            new EnemySpawnInfo("Quadrado", 200, 9),
+        };
     }
 
     void FixedUpdate()
     {
         updateCalls++;
-        if (updateCalls % spawnInterval == 0)
+        for (int i = 0; i < enemiesSpawnInfo.Length; i++)
         {
-            Vector2 pos = this.transform.position;
-            pos.x += Random.Range(-6f, 6f);
+            EnemySpawnInfo spawnInfo = enemiesSpawnInfo[i];
 
-            Vector2 vel = new Vector2(0, -3);
-            vel.x += Random.Range(-5f, 5f);
-            vel.Normalize();
-            vel *= velocityMag;
+            if (updateCalls % spawnInfo.spawnInterval == 0)
+            {
+                Vector2 pos = this.transform.position;
+                pos.x += Random.Range(-6f, 6f);
 
-            TrianguloController.Create(pos, vel, unspawner);
+                Spawn(pos, spawnInfo);
+            }
+            /*
+            if (updateCalls % INCREASE_SPEED_INTERVAL == 0)
+            {
+                velocityMag += 1f;
+            }
+            if (spawnInterval > MIN_SPAWN_INTERVAL &&
+                updateCalls % INCREASE_SPAWN_RATE_INTERVAL == 0)
+            {
+                spawnInterval -= 15;
+            }
+            */
         }
-        if (updateCalls % INCREASE_SPEED_INTERVAL == 0)
-        {
-            velocityMag += 1f;
-        }
-        if (spawnInterval > MIN_SPAWN_INTERVAL && 
-            updateCalls % INCREASE_SPAWN_RATE_INTERVAL == 0)
-        {
-            spawnInterval -= 15;
-        }
+    }
+
+    private GameObject Spawn(Vector2 position, EnemySpawnInfo spawnInfo)
+    {
+        GameObject enemy = (GameObject)Resources.Load("Prefabs/" + spawnInfo.shape);
+        GameObject newEnemy = Instantiate(enemy) as GameObject;
+
+        newEnemy.transform.position = position;
+        EnemyController controller = newEnemy.GetComponent<EnemyController>();
+        controller.unspawner = this.unspawner;
+
+        Vector2 velocity = controller.getSpawnVelocity();
+        velocity *= spawnInfo.velocityMag;
+        newEnemy.GetComponent<Rigidbody2D>().velocity = velocity;
+
+        return newEnemy;
+    }
+}
+
+class EnemySpawnInfo : MonoBehaviour
+{
+    public string shape;
+    public int spawnInterval;
+    public float velocityMag;
+
+    public EnemySpawnInfo(string shape, int spawnInterval, float velocityMag)
+    {
+        this.shape = shape;
+        this.spawnInterval = spawnInterval;
+        this.velocityMag = velocityMag;
     }
 }

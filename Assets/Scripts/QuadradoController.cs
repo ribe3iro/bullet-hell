@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrianguloController : EnemyController
+public class QuadradoController : EnemyController
 {
     public override Vector2 getSpawnVelocity()
     {
