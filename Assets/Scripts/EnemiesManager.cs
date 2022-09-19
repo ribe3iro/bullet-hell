@@ -6,43 +6,78 @@ public class EnemiesManager : MonoBehaviour
 {
     [SerializeField] EdgeCollider2D unspawner;
 
-    const int INCREASE_SPEED_INTERVAL = 1500;
-    const int INCREASE_SPAWN_RATE_INTERVAL = 1000;
-
-    const int MIN_SPAWN_INTERVAL = 50;
+    EnemySpawnInfo[] enemiesSpawnInfo;
 
     int updateCalls = 0;
-    int spawnInterval = 100;
-    float velocityMag = 3;
 
     void Start()
     {
-        
+        enemiesSpawnInfo = new EnemySpawnInfo[]{
+            new EnemySpawnInfo("Triangulo", 100, 3f, 10),
+            new EnemySpawnInfo("Quadrado", 500, 7.5f, 4),
+        };
     }
 
     void FixedUpdate()
     {
         updateCalls++;
-        if (updateCalls % spawnInterval == 0)
+        for (int i = 0; i < enemiesSpawnInfo.Length; i++)
         {
-            Vector2 pos = this.transform.position;
-            pos.x += Random.Range(-6f, 6f);
+            EnemySpawnInfo spawnInfo = enemiesSpawnInfo[i];
 
-            Vector2 vel = new Vector2(0, -3);
-            vel.x += Random.Range(-5f, 5f);
-            vel.Normalize();
-            vel *= velocityMag;
+            if (updateCalls % spawnInfo.spawnInterval == 0)
+            {
+                Vector2 pos = this.transform.position;
+                pos.x += Random.Range(-6f, 6f);
 
-            TrianguloController.Create(pos, vel, unspawner);
+                Spawn(pos, spawnInfo);
+            }
         }
-        if (updateCalls % INCREASE_SPEED_INTERVAL == 0)
+    }
+
+    private GameObject Spawn(Vector2 position, EnemySpawnInfo spawnInfo)
+    {
+        spawnInfo.spawns++;
+
+        GameObject enemy = (GameObject)Resources.Load("Prefabs/" + spawnInfo.shape);
+        GameObject newEnemy = Instantiate(enemy) as GameObject;
+
+        newEnemy.transform.position = position;
+
+        EnemyController controller = newEnemy.GetComponent<EnemyController>();
+        controller.unspawner = this.unspawner;
+
+        Vector2 velocity = controller.getSpawnVelocity();
+        velocity *= spawnInfo.velocityMag;
+        newEnemy.GetComponent<Rigidbody2D>().velocity = velocity;
+
+        if (spawnInfo.spawns % spawnInfo.spawnsUntilIncreaseDifficulty == 0)
         {
-            velocityMag += 1f;
+            controller.increaseDifficulty(spawnInfo);
         }
-        if (spawnInterval > MIN_SPAWN_INTERVAL && 
-            updateCalls % INCREASE_SPAWN_RATE_INTERVAL == 0)
-        {
-            spawnInterval -= 15;
-        }
+
+        return newEnemy;
+    }
+}
+
+public class EnemySpawnInfo : MonoBehaviour
+{
+    public string shape;
+    public int spawnInterval;
+    public float velocityMag;
+    public int spawnsUntilIncreaseDifficulty;
+
+    public int spawns;
+
+    public static int MIN_SPAWN_INTERVAL = 50;
+
+    public EnemySpawnInfo(string shape, int spawnInterval, float velocityMag, int spawnsUntilIncreaseDifficulty)
+    {
+        this.shape = shape;
+        this.spawnInterval = spawnInterval;
+        this.velocityMag = velocityMag;
+        this.spawnsUntilIncreaseDifficulty = spawnsUntilIncreaseDifficulty;
+
+        this.spawns = 0;
     }
 }
