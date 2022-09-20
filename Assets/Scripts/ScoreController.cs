@@ -5,7 +5,7 @@ using TMPro;
 
 public class ScoreController : MonoBehaviour
 {
-    int score = 0;
+    [HideInInspector] public int score = 0;
     [SerializeField] TextMeshProUGUI scoreText;
 
     int updateCalls = 0;
