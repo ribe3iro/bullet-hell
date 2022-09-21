@@ -5,6 +5,7 @@ using UnityEngine;
 public class player : MonoBehaviour
 {
     [SerializeField] float speed;
+    [SerializeField] GameObject gameOver;
 
     public int maxHp;
     [HideInInspector] public int heartNum;
@@ -29,6 +30,9 @@ public class player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Time.timeScale == 0){
+            return;
+        }
         if (isDamage){
             cc.enabled = false;
             if (blinkTime > 0.2f){
@@ -81,7 +85,9 @@ public class player : MonoBehaviour
             heartNum--;
             if (heartNum == 0)
             {
-                //Debug.Log ("Game Over!");
+                Time.timeScale = 0;
+                gameOver.SetActive(true);
+                sr.enabled = true;  
             }
         }
     }
