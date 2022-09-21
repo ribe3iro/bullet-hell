@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QuadradoController : EnemyController
+public class LosangoController : EnemyController
 {
     public override void Spawn(EnemySpawnInfo spawnInfo)
     {
-        Vector2 velocity = new Vector2(0, -1);
-        velocity.x = Random.Range(0, 1) < 0.5f ? 1 : -1;
-        velocity.x *= Random.Range(3, 5);
+        Vector2 velocity = new Vector2(0, -3);
+        velocity.x += Random.Range(-5f, 5f);
 
         velocity.Normalize();
         velocity *= spawnInfo.velocityMag;
@@ -18,18 +17,17 @@ public class QuadradoController : EnemyController
 
     public override void IncreaseDifficulty(EnemySpawnInfo spawnInfo)
     {
-        spawnInfo.spawnInterval -= 15;
+        spawnInfo.spawnInterval -= 8;
         if (spawnInfo.spawnInterval < EnemySpawnInfo.MIN_SPAWN_INTERVAL)
         {
             spawnInfo.spawnInterval = EnemySpawnInfo.MIN_SPAWN_INTERVAL;
         }
 
-        spawnInfo.velocityMag += 0.4f;
+        spawnInfo.velocityMag += 0.3f;
     }
 
     void FixedUpdate()
     {
-        float xVel = GetComponent<Rigidbody2D>().velocity.x;
-        GetComponent<Animator>().SetFloat("xVelocity", xVel);
+
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemiesManager : MonoBehaviour
 {
     [SerializeField] EdgeCollider2D unspawner;
+    [SerializeField] GameObject player;
 
     EnemySpawnInfo[] enemiesSpawnInfo;
 
@@ -15,6 +16,7 @@ public class EnemiesManager : MonoBehaviour
         enemiesSpawnInfo = new EnemySpawnInfo[]{
             new EnemySpawnInfo("Triangulo", 100, 3f, 10),
             new EnemySpawnInfo("Quadrado", 500, 7.5f, 4),
+            new EnemySpawnInfo("Losango", 100, 3f, 10),
         };
     }
 
@@ -27,36 +29,12 @@ public class EnemiesManager : MonoBehaviour
 
             if (updateCalls % spawnInfo.spawnInterval == 0)
             {
-                Vector2 pos = this.transform.position;
-                pos.x += Random.Range(-6f, 6f);
+                Vector2 spawnPosition = this.transform.position;
+                spawnPosition.x += Random.Range(-6f, 6f);
 
-                Spawn(pos, spawnInfo);
+                EnemyController.GenerateEnemy(spawnInfo, spawnPosition, this.unspawner, this.player);
             }
         }
-    }
-
-    private GameObject Spawn(Vector2 position, EnemySpawnInfo spawnInfo)
-    {
-        spawnInfo.spawns++;
-
-        GameObject enemy = (GameObject)Resources.Load("Prefabs/" + spawnInfo.shape);
-        GameObject newEnemy = Instantiate(enemy) as GameObject;
-
-        newEnemy.transform.position = position;
-
-        EnemyController controller = newEnemy.GetComponent<EnemyController>();
-        controller.unspawner = this.unspawner;
-
-        Vector2 velocity = controller.getSpawnVelocity();
-        velocity *= spawnInfo.velocityMag;
-        newEnemy.GetComponent<Rigidbody2D>().velocity = velocity;
-
-        if (spawnInfo.spawns % spawnInfo.spawnsUntilIncreaseDifficulty == 0)
-        {
-            controller.increaseDifficulty(spawnInfo);
-        }
-
-        return newEnemy;
     }
 }
 
