@@ -18,6 +18,7 @@ public class Title : MonoBehaviour{
     private void Update(){
         if (!goNextScene && fade.IsFadeOutComplete()){
             SceneManager.LoadScene(1);
+            Time.timeScale = 1;
             goNextScene = true;
         }
     }

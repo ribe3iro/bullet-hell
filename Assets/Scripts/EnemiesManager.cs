@@ -14,9 +14,9 @@ public class EnemiesManager : MonoBehaviour
     void Start()
     {
         enemiesSpawnInfo = new EnemySpawnInfo[]{
-            new EnemySpawnInfo("Triangulo", 100, 3f, 10),
+            new EnemySpawnInfo("Hexagono", 100, 3f, 10),
             new EnemySpawnInfo("Quadrado", 500, 7.5f, 4),
-            new EnemySpawnInfo("Losango", 100, 3f, 10),
+            new EnemySpawnInfo("Triangulo", 100, 3f, 10),
         };
     }
 

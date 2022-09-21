@@ -25,10 +25,4 @@ public class TrianguloController : EnemyController
 
         spawnInfo.velocityMag += 0.3f;
     }
-
-    void FixedUpdate()
-    {
-        float xVel = GetComponent<Rigidbody2D>().velocity.x;
-        GetComponent<Animator>().SetFloat("xVelocity", xVel);
-    }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LosangoController : EnemyController
+public class HexagonoController : EnemyController
 {
     public override void Spawn(EnemySpawnInfo spawnInfo)
     {
@@ -28,6 +28,7 @@ public class LosangoController : EnemyController
 
     void FixedUpdate()
     {
-
+        float xVel = GetComponent<Rigidbody2D>().velocity.x;
+        GetComponent<Animator>().SetFloat("xVelocity", xVel);
     }
 }
