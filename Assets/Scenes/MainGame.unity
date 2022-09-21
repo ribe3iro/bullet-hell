@@ -601,6 +601,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unspawner: {fileID: 1251588192}
+  player: {fileID: 1292904847}
 --- !u!95 &530177590
 Animator:
   serializedVersion: 4

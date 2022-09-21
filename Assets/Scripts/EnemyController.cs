@@ -4,12 +4,28 @@ using UnityEngine;
 
 public abstract class EnemyController : MonoBehaviour
 {
-    public Collider2D unspawner;
+    protected Collider2D unspawner;
+    protected GameObject player;
 
-    void FixedUpdate()
+    public static void GenerateEnemy(EnemySpawnInfo spawnInfo, Vector2 spawnPosition, Collider2D unspawner, GameObject player)
     {
-        float xVel = GetComponent<Rigidbody2D>().velocity.x;
-        GetComponent<Animator>().SetFloat("xVelocity", xVel);
+        spawnInfo.spawns++;
+
+        GameObject enemy = (GameObject)Resources.Load("Prefabs/" + spawnInfo.shape);
+        GameObject newEnemy = Instantiate(enemy) as GameObject;
+
+        newEnemy.transform.position = spawnPosition;
+
+        EnemyController controller = newEnemy.GetComponent<EnemyController>();
+        controller.unspawner = unspawner;
+        controller.player = player;
+
+        controller.Spawn(spawnInfo);
+
+        if (spawnInfo.spawns % spawnInfo.spawnsUntilIncreaseDifficulty == 0)
+        {
+            controller.IncreaseDifficulty(spawnInfo);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -20,6 +36,6 @@ public abstract class EnemyController : MonoBehaviour
         }
     }
 
-    abstract public Vector2 getSpawnVelocity();
-    abstract public void increaseDifficulty(EnemySpawnInfo spawnInfo);
+    abstract public void Spawn(EnemySpawnInfo spawnInfo);
+    abstract public void IncreaseDifficulty(EnemySpawnInfo spawnInfo);
 }
