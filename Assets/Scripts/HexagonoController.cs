@@ -17,7 +17,7 @@ public class HexagonoController : EnemyController
 
     public override void IncreaseDifficulty(EnemySpawnInfo spawnInfo)
     {
-        spawnInfo.spawnInterval -= 8;
+        spawnInfo.spawnInterval -= 10;
         if (spawnInfo.spawnInterval < EnemySpawnInfo.MIN_SPAWN_INTERVAL)
         {
             spawnInfo.spawnInterval = EnemySpawnInfo.MIN_SPAWN_INTERVAL;

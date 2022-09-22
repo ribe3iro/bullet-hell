@@ -18,7 +18,7 @@ public class QuadradoController : EnemyController
 
     public override void IncreaseDifficulty(EnemySpawnInfo spawnInfo)
     {
-        spawnInfo.spawnInterval -= 15;
+        spawnInfo.spawnInterval -= 10;
         if (spawnInfo.spawnInterval < EnemySpawnInfo.MIN_SPAWN_INTERVAL)
         {
             spawnInfo.spawnInterval = EnemySpawnInfo.MIN_SPAWN_INTERVAL;
