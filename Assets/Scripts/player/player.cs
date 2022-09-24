@@ -7,6 +7,9 @@ public class player : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] GameObject gameOver;
 
+    [SerializeField] AudioSource mainGameMusic;
+    [SerializeField] AudioSource damageEffect;
+
     public int maxHp;
     [HideInInspector] public int heartNum;
 
@@ -33,6 +36,10 @@ public class player : MonoBehaviour
         if (Time.timeScale == 0){
             return;
         }
+
+        mainGameMusic.pitch = 1;
+        mainGameMusic.volume = 0.4f;
+
         if (isDamage){
             cc.enabled = false;
             if (blinkTime > 0.2f){
@@ -83,11 +90,16 @@ public class player : MonoBehaviour
         {
             isDamage = true;
             heartNum--;
+
+            damageEffect.Play();
+
             if (heartNum == 0)
             {
                 Time.timeScale = 0;
                 gameOver.SetActive(true);
-                sr.enabled = true;  
+                sr.enabled = true;
+                mainGameMusic.pitch = 0.6f;
+                mainGameMusic.volume = 0.3f;
             }
         }
     }
