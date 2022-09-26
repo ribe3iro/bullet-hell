@@ -10,13 +10,12 @@ public class GameOver : MonoBehaviour
     [SerializeField] TextMeshProUGUI finalScore;
     public FadeImage fade;
     private bool retrying = false;
-    private bool quiting = false;
 
     // Start is called before the first frame update
     void Start()
     {
         int points = score.GetComponent<ScoreController>().score;
-        finalScore.text = points.ToString() + " pts";
+        finalScore.text = "SCORE " + points.ToString();
         score.SetActive(false);
     }
 
